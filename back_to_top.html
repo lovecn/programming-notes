@@ -1,0 +1,17 @@
+<a class="back2top" style="display:none;"></a>
+<style>
+
+.back2top {z-index:99;background:#000;width:36px;height:36px;display:block;position:fixed;right:20px;bottom:20px;cursor:pointer;border-radius:2px;opacity:.6;}
+.back2top:before {content:"";position:absolute;right:8px;top:10px;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:15px solid #fff;}
+</style>
+
+//https://www.idevs.cn/2016/3956.html
+window.onscroll=function(){
+    var goTop = document.getElementsByClassName("back2top");
+    if(goTop.length>0){
+        goTop[0].style.display = document.documentElement.scrollTop >= 200 || document.body.scrollTop >= 200 ? 'block':'none';
+        goTop[0].onclick=function(){
+            document.body.scrollTop=0;
+            document.documentElement.scrollTop=0;
+        }
+    }
