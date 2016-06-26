@@ -1,0 +1,48 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>iframe postmessage 父页面http://cuihuan.net:1015/demo_file/postmesage/demo.html</title>
+    <script type="text/JavaScript">
+        function sendIt() {
+            // 通过 postMessage 向子窗口发送数据
+            document.getElementById("otherPage").contentWindow
+                    .postMessage(
+                    document.getElementById("message").value,
+                    "http://cuihuan.net:8003"
+            );
+        }
+    </script>
+</head>
+<body>
+<!-- 通过 iframe 嵌入子页面 -->
+<iframe src="http://cuihuan.net:8003/test.html" id="otherPage"></iframe>
+<br/>
+<br/>
+this is the 1015 port for cuixiaozhuai。
+<br/>
+
+<input type="text" id="message"/>
+<input type="button" value="Send to child.com" onclick="sendIt()"/>
+</body>
+</html>
+
+//http://cuihuan.net:8003/test.html
+<html> 
+ <head> 
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+ <title>Web page from child.com</title> 
+ <script type="text/JavaScript"> 
+	  
+	window.addEventListener("message", function( event ) { 
+		  
+	document.getElementById("content").innerHTML+=event.data+"<br/>"; 
+	 }, false ); 
+
+ </script> 
+ </head> 
+ <body> 
+
+this is the 8003  port for cuixiaozhuai
+	 <div id="content"></div> 
+ </body> 
+ </html>
