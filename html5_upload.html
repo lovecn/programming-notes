@@ -1,0 +1,89 @@
+//创建缩略图样式
+function createThumbnailFromUrl(context,fileURL) {
+     //创建元素
+     var img=document.createElement('img'),
+         imgBox=document.createElement('div'),
+         imgContent=document.createElement('div');
+     //添加Class    
+     imgBox.classList.add('img-box');
+     imgContent.classList.add('img-content');
+     //动态插入创建的元素 
+     context.appendChild(imgContent);
+     imgContent.appendChild(imgBox);
+     imgBox.appendChild(img);
+     //创建canvas重绘缩略图    
+     var canvas=document.createElement('canvas');
+     var context=canvas.getContext('2d'); 
+     // 创建image对象
+     var image=new Image();
+     image.src=fileURL;
+     image.onload=function () {
+        canvas.width=120;
+        canvas.height=120*(image.height/image.width);
+        context.drawImage(image,0,0,canvas.width,canvas.height);
+        img.src=canvas.toDataURL('image/png',0.5);  
+     }  
+}
+
+window.addEventListener('load',function () {
+    var uploader=document.querySelectorAll('#uploader')[0];
+    var button=document.querySelectorAll('#button')[0];
+    var upbox=document.querySelectorAll('.upbox')[0];
+    var files,filesLen,newFileURL,newFile;
+    var filesArray=[],newURL;
+    var test=document.querySelectorAll('#test')[0];
+    //input选框change事件，取得文件，创建缩略图
+    uploader.addEventListener('change',function (event) {
+        var e=event||window.event;
+        var target=e.target;
+        files=target.files;
+        filesLen=files.length;
+        for(let i=0;i<filesLen;i++){
+            var reader=new FileReader();
+            //文件读取结束后要做的事
+            reader.onload=function (event) {
+                //读取用户选择的文件
+                var fileURL=event.target.result;
+                //根据读取的文件创建缩略图
+                createThumbnailFromUrl(upbox,fileURL);
+                //上传前改变图片的格式
+                //创建canvas重绘缩略图    
+                var canvas=document.createElement('canvas');
+                var context=canvas.getContext('2d'); 
+                // 创建image对象
+                var image=new Image();//这里把fileURL赋值给src，就可以拿到用户选择的图片，此时可以获取到图片的宽高
+                image.src=fileURL;
+                image.onload=function () {
+                    canvas.width=image.width/2;
+                    canvas.height=image.width/2*(image.height/image.width);
+                    context.drawImage(image,0,0,canvas.width,canvas.height);
+                    newURL=canvas.toDataURL('image/jpeg',0.5);
+                    var base=newURL.substr(23); 
+                    newFile=atob(base);
+                } 
+            }
+            reader.readAsDataURL(files[i]);
+            filesArray.push(newURL);
+        }
+    },false);
+    //button按钮点击上传http://mrzhang123.github.io/2016/03/31/H5File/
+    button.addEventListener('click',function () {
+        if(filesLen.length!=0){
+            var data=new FormData();
+            var i=0;
+            //将所有的经过转码后的base64组成的数组传给后台
+            while(i<filesLen){
+                data.append('file'+i,filesArray[i]);
+                i++;
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open('post','uploader.php',true);
+            xhr.onreadystatechange=function () {
+                if(xhr.readyState==4){
+                    console.log(xhr.responseText);
+                }
+            };
+            xhr.send(data);
+        }
+    })
+},false);
