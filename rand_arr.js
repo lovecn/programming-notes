@@ -1,0 +1,2 @@
+#http://caibaojian.com/js-get-random-elements-from-array.html
+function getRandomArrayElements(arr, count) { var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index; while (i-- > min) { index = Math.floor((i + 1) * Math.random()); temp = shuffled[index]; shuffled[index] = shuffled[i]; shuffled[i] = temp; } return shuffled.slice(min); } var items = ['1','2','4','5','6','7','8','9','10']; console.log( getRandomArrayElements(items, 4) );
